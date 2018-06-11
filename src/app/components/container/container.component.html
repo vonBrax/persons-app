@@ -1,0 +1,110 @@
+<!-- Main component wrapper to handle click events (delegation) -->
+<div (click)="handleClick($event)">
+
+  <!-- Header -->
+  <mat-toolbar color="primary">
+    <mat-toolbar-row class="header-row">
+      <span>Persons App</span>
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="sidenav.toggle()"
+      >Toggle Sidebar</button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <!-- Main area + Sidenav-->
+  <mat-sidenav-container>
+
+    <!-- Main content-->
+    <mat-sidenav-content
+      class="main"
+      role="main"
+    >
+      <!-- Child component with content projection -->
+      <app-persons
+        [dataSource]="dataSource"
+        [columnsToDisplay]="columnsToDisplay"
+        (personEvent)="handlePersonEvent($event)"
+      >
+        <nav class="nav">
+          <span>
+            <a
+              routerLink="/persons"
+              routerLinkActive="active-filter"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >All</a>
+          </span>
+
+          <span *ngFor="let trait of stats | toArray">
+            <ng-container *ngIf="trait.name !== 'total' && trait.value > 0">&nbsp;|&nbsp;
+              <a
+                routerLink="/persons/{{trait.name}}"
+                routerLinkActive="active-filter"
+              >{{trait.name}}</a>
+            </ng-container>
+          </span>
+
+        </nav>
+      </app-persons>
+
+    </mat-sidenav-content>
+
+    <!-- Sidenav -->
+    <mat-sidenav
+      #sidenav
+      position="end"
+      mode="side"
+      opened
+      role="region"
+      class="sidebar"
+    >
+      <h2>Sidebar</h2>
+      <h3>
+        <a
+          routerLink="/persons"
+          routerLinkActive="active-filter"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >Total Persons</a>: {{stats.total}}</h3>
+      <ul>
+
+        <li *ngFor="let trait of stats | toArray">
+          <ng-container *ngIf="trait.value > 0 && trait.name !== 'total'">
+            <a
+              routerLink="/persons/{{trait.name}}"
+              routerLinkActive="active-filter"
+            >{{trait.name}}: {{trait.value}}</a>
+          </ng-container>
+        </li>
+
+        <!--
+        <li *ngIf="stats.superPowers > 0">
+          <a
+            routerLink="/persons/super-powers"
+            routerLinkActive="active-filter"
+          >With super powers</a>: {{stats.superPowers}}</li>
+        <li *ngIf="stats.rich > 0">
+          <a
+            routerLink="/persons/rich"
+            routerLinkActive="active-filter"
+          >Rich</a>: {{stats.rich}}</li>
+        <li *ngIf="stats.genius > 0">
+          <a
+            routerLink="/persons/genius"
+            routerLinkActive="active-filter"
+          >Genius</a>: {{stats.genius}}</li>
+-->
+
+      </ul>
+    </mat-sidenav>
+  </mat-sidenav-container>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <h2>Footer</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia consequuntur, aliquid cupiditate provident ex laborum ratione
+      nisi excepturi velit illum aut alias esse nemo necessitatibus fuga ab consectetur ut ipsam eos dolore enim accusamus
+      ad maxime. Aliquam quae numquam amet quam blanditiis, rerum, nulla, beatae consectetur ut nam animi adipisci.</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum, veritatis.</p>
+  </footer>
+</div>
