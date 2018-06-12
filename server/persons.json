@@ -1,0 +1,5 @@
+[
+  { "name": "Bill Gates", "hasSuperPowers": true, "isRich": false, "isGenius": true },
+  { "name": "Joe Doe", "hasSuperPowers": true, "isRich": true, "isGenius": true },
+  { "name": "Michael Faraday", "hasSuperPowers": true, "isRich": null, "isGenius": true }
+]

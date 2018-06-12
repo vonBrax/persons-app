@@ -10,7 +10,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 const personsRoute = require('./routes');
-const port = process.env.PORT || 3000;
+const port = 3000; // Need to be 3000 to work with the FE app
 const app = express();
 
 app.use(cors());

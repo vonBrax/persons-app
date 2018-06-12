@@ -7603,7 +7603,7 @@
         })(),
         vl = (function() {
           function t(t) {
-            (this.http = t), (this.data = new Is(void 0)), this.loadPersons();
+            (this.http = t), (this.data = new Is(void 0));
           }
           return (
             (t.prototype.loadPersons = function() {
@@ -7655,9 +7655,10 @@
               var t = this;
               (this.columnsToDisplay = this.calculateTraits(new ml({})).concat('delete')),
                 this.isBEActive
-                  ? this.personBEService.data.subscribe(function(e) {
+                  ? (this.personBEService.loadPersons(),
+                    this.personBEService.data.subscribe(function(e) {
                       return t.handleData(e);
-                    })
+                    }))
                   : this.personService.data.subscribe(function(e) {
                       return t.handleData(e);
                     }),
@@ -7713,8 +7714,6 @@
                   })),
                 (this.dataSource = this.dataSource || new fl(this.filteredPersons)),
                 (this.dataSource.data = this.filteredPersons),
-                console.log('HANDLE DATA'),
-                console.log(this.dataSource.data),
                 (this.viewOnlyStats = this.calculateStats()));
             }),
             (t.prototype.handlePersonEvent = function(t) {
@@ -12116,12 +12115,10 @@
                 var e = { action: 'add', person: new ml(this.formGroup.value) };
                 this.personEvent.emit(e),
                   this.formGroup.reset(),
-                  (this.dataSource.paginator && this.dataSource.sort) ||
+                  0 === this.dataSource.data.length &&
                     setTimeout(function() {
-                      (t.dataSource.paginator = t.dataSource.paginator || t.paginator),
-                        (t.dataSource.sort = t.dataSource.sort || t.sort),
-                        t.cd.detectChanges();
-                    }, 300);
+                      return t.cd.detectChanges();
+                    }, 100);
               } else this.name.markAsTouched();
             }),
             (t.prototype.deleteUser = function(t) {
@@ -12130,13 +12127,18 @@
             (t.prototype.onChange = function(t, e, n) {
               this.personEvent.emit({ action: 'update', person: e, propertyChanged: { name: n, value: t.checked } });
             }),
+            (t.prototype.onElementInView = function(t) {
+              var e = this;
+              setTimeout(function() {
+                (e.dataSource.paginator = e.dataSource.paginator || e.paginator),
+                  (e.dataSource.sort = e.dataSource.sort || e.sort);
+              }, 0);
+            }),
             t
           );
         })(),
         gh = function() {},
-        vh = function() {
-          this.title = 'app';
-        },
+        vh = function() {},
         _h = function() {},
         bh = '*';
       function wh(t, e) {
@@ -30811,10 +30813,21 @@
           }
         );
       }
-      var IC = 0,
-        PC = (function() {
+      var IC = (function() {
           function t() {
-            (this._openCloseAllActions = new it()), (this.id = 'cdk-accordion-' + IC++), (this._multi = !1);
+            this.elementInView = new Be();
+          }
+          return (
+            (t.prototype.ngOnInit = function() {
+              this.elementInView.emit('Element loaded');
+            }),
+            t
+          );
+        })(),
+        PC = 0,
+        TC = (function() {
+          function t() {
+            (this._openCloseAllActions = new it()), (this.id = 'cdk-accordion-' + PC++), (this._multi = !1);
           }
           return (
             Object.defineProperty(t.prototype, 'multi', {
@@ -30839,8 +30852,8 @@
             t
           );
         })(),
-        TC = 0,
-        AC = (function() {
+        AC = 0,
+        RC = (function() {
           function t(t, e, n) {
             var r = this;
             (this.accordion = t),
@@ -30851,7 +30864,7 @@
               (this.opened = new Be()),
               (this.destroyed = new Be()),
               (this.expandedChange = new Be()),
-              (this.id = 'cdk-accordion-child-' + TC++),
+              (this.id = 'cdk-accordion-child-' + AC++),
               (this._expanded = !1),
               (this._disabled = !1),
               (this._removeUniqueSelectionListener = function() {}),
@@ -30915,8 +30928,8 @@
             t
           );
         })(),
-        RC = function() {},
-        DC = (function(t) {
+        DC = function() {},
+        NC = (function(t) {
           function e() {
             var e = (null !== t && t.apply(this, arguments)) || this;
             return (e._hideToggle = !1), (e.displayMode = 'default'), e;
@@ -30935,16 +30948,16 @@
             }),
             e
           );
-        })(PC),
-        NC = 0,
-        MC = (function(t) {
+        })(TC),
+        MC = 0,
+        FC = (function(t) {
           function e(e, n, r, i) {
             var o = t.call(this, e, n, r) || this;
             return (
               (o._viewContainerRef = i),
               (o._hideToggle = !1),
               (o._inputChanges = new it()),
-              (o._headerId = 'mat-expansion-panel-header-' + NC++),
+              (o._headerId = 'mat-expansion-panel-header-' + MC++),
               (o.accordion = e),
               o
             );
@@ -31004,8 +31017,8 @@
             }),
             e
           );
-        })(AC),
-        FC = (function() {
+        })(RC),
+        jC = (function() {
           function t(t, e, n, r) {
             var i = this;
             (this.panel = t),
@@ -31059,9 +31072,9 @@
             t
           );
         })(),
-        jC = function() {},
         VC = function() {},
-        LC = Hr({
+        LC = function() {},
+        zC = Hr({
           encapsulation: 2,
           styles: [
             '.mat-expansion-panel{transition:box-shadow 280ms cubic-bezier(.4,0,.2,1);box-sizing:content-box;display:block;margin:0;transition:margin 225ms cubic-bezier(.4,0,.2,1)}.mat-expansion-panel:not([class*=mat-elevation-z]){box-shadow:0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12)}.mat-expansion-panel-content{overflow:hidden}.mat-expansion-panel-content.mat-expanded{overflow:visible}.mat-expansion-panel-body{padding:0 24px 16px}.mat-expansion-panel-spacing{margin:16px 0}.mat-accordion>.mat-expansion-panel-spacing:first-child,.mat-accordion>:first-child:not(.mat-expansion-panel) .mat-expansion-panel-spacing{margin-top:0}.mat-accordion>.mat-expansion-panel-spacing:last-child,.mat-accordion>:last-child:not(.mat-expansion-panel) .mat-expansion-panel-spacing{margin-bottom:0}.mat-action-row{border-top-style:solid;border-top-width:1px;display:flex;flex-direction:row;justify-content:flex-end;padding:16px 8px 16px 24px}.mat-action-row button.mat-button{margin-left:8px}[dir=rtl] .mat-action-row button.mat-button{margin-left:0;margin-right:8px}'
@@ -31096,10 +31109,10 @@
             ]
           }
         });
-      function zC(t) {
+      function BC(t) {
         return Mo(0, [(t()(), mi(0, null, null, 0))], null, null);
       }
-      function BC(t) {
+      function HC(t) {
         return Mo(
           2,
           [
@@ -31130,7 +31143,7 @@
             (t()(),
             yi(2, 0, null, null, 3, 'div', [['class', 'mat-expansion-panel-body']], null, null, null, null, null)),
             Oo(null, 1),
-            (t()(), mi(16777216, null, null, 1, null, zC)),
+            (t()(), mi(16777216, null, null, 1, null, BC)),
             io(5, 212992, null, 0, gp, [Re, Cn], { portal: [0, 'portal'] }, null),
             Oo(null, 2)
           ],
@@ -31143,7 +31156,7 @@
           }
         );
       }
-      var HC = Hr({
+      var UC = Hr({
         encapsulation: 2,
         styles: [
           ".mat-expansion-panel-header{display:flex;flex-direction:row;align-items:center;padding:0 24px}.mat-expansion-panel-header:focus,.mat-expansion-panel-header:hover{outline:0}.mat-expansion-panel-header.mat-expanded:focus,.mat-expansion-panel-header.mat-expanded:hover{background:inherit}.mat-expansion-panel-header:not([aria-disabled=true]){cursor:pointer}.mat-content{display:flex;flex:1;flex-direction:row;overflow:hidden}.mat-expansion-panel-header-description,.mat-expansion-panel-header-title{display:flex;flex-grow:1;margin-right:16px}[dir=rtl] .mat-expansion-panel-header-description,[dir=rtl] .mat-expansion-panel-header-title{margin-right:0;margin-left:16px}.mat-expansion-panel-header-description{flex-grow:2}.mat-expansion-indicator::after{border-style:solid;border-width:0 2px 2px 0;content:'';display:inline-block;padding:3px;transform:rotate(45deg);vertical-align:middle}"
@@ -31215,7 +31228,7 @@
           ]
         }
       });
-      function UC(t) {
+      function qC(t) {
         return Mo(
           0,
           [
@@ -31241,7 +31254,7 @@
           }
         );
       }
-      function qC(t) {
+      function GC(t) {
         return Mo(
           2,
           [
@@ -31249,7 +31262,7 @@
             Oo(null, 0),
             Oo(null, 1),
             Oo(null, 2),
-            (t()(), mi(16777216, null, null, 1, null, UC)),
+            (t()(), mi(16777216, null, null, 1, null, qC)),
             io(5, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null)
           ],
           function(t, e) {
@@ -31258,16 +31271,44 @@
           null
         );
       }
-      var GC = Hr({
+      var WC = Hr({
         encapsulation: 0,
         styles: [
           [
             '[_nghost-%COMP%]{display:block;padding:0 2rem 2rem;min-height:55vh}.form[_ngcontent-%COMP%]{display:flex;flex-flow:row wrap;justify-content:space-between;align-items:center}.search[_ngcontent-%COMP%]{margin-top:1rem;width:100%}table[_ngcontent-%COMP%]{width:100%}td[_ngcontent-%COMP%], th[_ngcontent-%COMP%]{width:20%}.btn--small[_ngcontent-%COMP%]{min-width:55px;line-height:25px}'
           ]
         ],
-        data: {}
+        data: {
+          animation: [
+            {
+              type: 7,
+              name: 'confirmDialog',
+              definitions: [
+                {
+                  type: 0,
+                  name: 'void',
+                  styles: { type: 6, styles: { transform: 'scale3d(1, 0, 1)', visibility: 'hidden' }, offset: null },
+                  options: void 0
+                },
+                {
+                  type: 0,
+                  name: '*',
+                  styles: { type: 6, styles: { transform: 'none', visibility: 'visible' }, offset: null },
+                  options: void 0
+                },
+                {
+                  type: 1,
+                  expr: 'void => *',
+                  animation: { type: 4, styles: null, timings: '500ms cubic-bezier(0.35, 0, 0.25, 1)' },
+                  options: null
+                }
+              ],
+              options: {}
+            }
+          ]
+        }
       });
-      function WC(t) {
+      function KC(t) {
         return Mo(
           0,
           [
@@ -31278,7 +31319,7 @@
           null
         );
       }
-      function KC(t) {
+      function YC(t) {
         return Mo(
           0,
           [
@@ -31289,7 +31330,7 @@
           null
         );
       }
-      function YC(t) {
+      function ZC(t) {
         return Mo(
           0,
           [
@@ -31334,7 +31375,7 @@
           }
         );
       }
-      function ZC(t) {
+      function QC(t) {
         return Mo(
           0,
           [
@@ -31362,7 +31403,7 @@
           }
         );
       }
-      function QC(t) {
+      function XC(t) {
         return Mo(
           0,
           [
@@ -31408,7 +31449,7 @@
           }
         );
       }
-      function XC(t) {
+      function $C(t) {
         return Mo(
           0,
           [
@@ -31495,7 +31536,7 @@
           }
         );
       }
-      function $C(t) {
+      function JC(t) {
         return Mo(
           0,
           [
@@ -31505,10 +31546,10 @@
             Co(335544320, 27, { headerCell: 0 }),
             Co(335544320, 28, { footerCell: 0 }),
             ao(2048, [[19, 4]], Ls, null, [al]),
-            (t()(), mi(0, null, null, 2, null, QC)),
+            (t()(), mi(0, null, null, 2, null, XC)),
             io(7, 16384, null, 0, ol, [wn], null, null),
             ao(2048, [[27, 4]], Vs, null, [ol]),
-            (t()(), mi(0, null, null, 2, null, XC)),
+            (t()(), mi(0, null, null, 2, null, $C)),
             io(10, 16384, null, 0, il, [wn], null, null),
             ao(2048, [[26, 4]], js, null, [il])
           ],
@@ -31518,12 +31559,12 @@
           null
         );
       }
-      function JC(t) {
+      function tx(t) {
         return Mo(
           0,
           [
             (t()(), yi(0, 0, null, null, 2, null, null, null, null, null, null, null)),
-            (t()(), mi(16777216, null, null, 1, null, $C)),
+            (t()(), mi(16777216, null, null, 1, null, JC)),
             io(2, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null),
             (t()(), mi(0, null, null, 0))
           ],
@@ -31533,7 +31574,7 @@
           null
         );
       }
-      function tx(t) {
+      function ex(t) {
         return Mo(
           0,
           [
@@ -31559,7 +31600,7 @@
           null
         );
       }
-      function ex(t) {
+      function nx(t) {
         return Mo(
           0,
           [
@@ -31573,7 +31614,7 @@
               4,
               'button',
               [['color', 'warn'], ['data-action', 'confirmAction'], ['mat-icon-button', ''], ['type', 'button']],
-              [[8, 'disabled', 0], [2, '_mat-animation-noopable', null]],
+              [[24, '@confirmDialog', 0], [8, 'disabled', 0], [2, '_mat-animation-noopable', null]],
               null,
               null,
               Ry,
@@ -31602,22 +31643,37 @@
             t(e, 2, 0, 'warn'), t(e, 4, 0);
           },
           function(t, e) {
-            t(e, 1, 0, Gi(e, 2).disabled || null, 'NoopAnimations' === Gi(e, 2)._animationMode),
+            t(e, 1, 0, void 0, Gi(e, 2).disabled || null, 'NoopAnimations' === Gi(e, 2)._animationMode),
               t(e, 3, 0, Gi(e, 4).inline);
           }
         );
       }
-      function nx(t) {
+      function rx(t) {
         return Mo(
           0,
           [
-            (t()(), yi(0, 0, null, null, 9, null, null, null, null, null, null, null)),
-            (t()(), yi(1, 0, null, null, 1, 'p', [], null, null, null, null, null)),
-            (t()(), Ro(2, null, ['Delete "', '"?'])),
-            (t()(), yi(3, 0, null, null, 6, 'p', [], null, null, null, null, null)),
+            (t()(), yi(0, 0, null, null, 10, null, null, null, null, null, null, null)),
             (t()(),
             yi(
-              4,
+              1,
+              0,
+              null,
+              null,
+              9,
+              'div',
+              [['class', 'confirm-dialog-wrap']],
+              [[24, '@confirmDialog', 0]],
+              null,
+              null,
+              null,
+              null
+            )),
+            (t()(), yi(2, 0, null, null, 1, 'p', [], null, null, null, null, null)),
+            (t()(), Ro(3, null, ['Delete "', '"?'])),
+            (t()(), yi(4, 0, null, null, 6, 'p', [], null, null, null, null, null)),
+            (t()(),
+            yi(
+              5,
               0,
               null,
               null,
@@ -31630,11 +31686,11 @@
               Ry,
               Ay
             )),
-            io(5, 180224, null, 0, df, [fn, Ah, uf, [2, Py]], null, null),
+            io(6, 180224, null, 0, df, [fn, Ah, uf, [2, Py]], null, null),
             (t()(), Ro(-1, 0, ['No'])),
             (t()(),
             yi(
-              7,
+              8,
               0,
               null,
               null,
@@ -31647,20 +31703,21 @@
               Ry,
               Ay
             )),
-            io(8, 180224, null, 0, df, [fn, Ah, uf, [2, Py]], { color: [0, 'color'] }, null),
+            io(9, 180224, null, 0, df, [fn, Ah, uf, [2, Py]], { color: [0, 'color'] }, null),
             (t()(), Ro(-1, 0, ['Yes']))
           ],
           function(t, e) {
-            t(e, 8, 0, 'warn');
+            t(e, 9, 0, 'warn');
           },
           function(t, e) {
-            t(e, 2, 0, e.parent.context.$implicit.name),
-              t(e, 4, 0, Gi(e, 5).disabled || null, 'NoopAnimations' === Gi(e, 5)._animationMode),
-              t(e, 7, 0, Gi(e, 8).disabled || null, 'NoopAnimations' === Gi(e, 8)._animationMode);
+            t(e, 1, 0, void 0),
+              t(e, 3, 0, e.parent.context.$implicit.name),
+              t(e, 5, 0, Gi(e, 6).disabled || null, 'NoopAnimations' === Gi(e, 6)._animationMode),
+              t(e, 8, 0, Gi(e, 9).disabled || null, 'NoopAnimations' === Gi(e, 9)._animationMode);
           }
         );
       }
-      function rx(t) {
+      function ix(t) {
         return Mo(
           0,
           [
@@ -31680,9 +31737,9 @@
               null
             )),
             io(1, 16384, null, 0, ll, [Ls, fn], null, null),
-            (t()(), mi(16777216, null, null, 1, null, ex)),
-            io(3, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null),
             (t()(), mi(16777216, null, null, 1, null, nx)),
+            io(3, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null),
+            (t()(), mi(16777216, null, null, 1, null, rx)),
             io(5, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null)
           ],
           function(t, e) {
@@ -31693,7 +31750,7 @@
           }
         );
       }
-      function ix(t) {
+      function ox(t) {
         return Mo(
           0,
           [
@@ -31718,7 +31775,7 @@
           null
         );
       }
-      function ox(t) {
+      function ax(t) {
         return Mo(
           0,
           [
@@ -31743,11 +31800,11 @@
           null
         );
       }
-      function ax(t) {
+      function sx(t) {
         return Mo(
           0,
           [
-            (t()(), yi(0, 0, null, null, 64, null, null, null, null, null, null, null)),
+            (t()(), yi(0, 0, null, null, 65, null, null, null, null, null, null, null)),
             (t()(),
             yi(
               1,
@@ -31861,7 +31918,7 @@
             io(18, 638976, null, 0, cw, [fn, sw, [8, null]], null, null),
             (t()(), Ro(-1, 0, ['search'])),
             Oo(null, 0),
-            (t()(), yi(21, 0, null, null, 43, 'div', [['class', 'mat-elevation-z8']], null, null, null, null, null)),
+            (t()(), yi(21, 0, null, null, 44, 'div', [['class', 'mat-elevation-z8']], null, null, null, null, null)),
             (t()(),
             yi(
               22,
@@ -31872,11 +31929,8 @@
               'table',
               [['class', 'mat-table'], ['mat-table', ''], ['matSort', '']],
               null,
-              [[null, 'change']],
-              function(t, e, n) {
-                var r = !0;
-                return 'change' === e && (r = !1 !== t.component.onChange(n) && r), r;
-              },
+              null,
+              null,
               mw,
               fw
             )),
@@ -31892,13 +31946,13 @@
             Co(335544320, 24, { headerCell: 0 }),
             Co(335544320, 25, { footerCell: 0 }),
             ao(2048, [[19, 4]], Ls, null, [al]),
-            (t()(), mi(0, null, null, 2, null, YC)),
+            (t()(), mi(0, null, null, 2, null, ZC)),
             io(36, 16384, null, 0, ol, [wn], null, null),
             ao(2048, [[24, 4]], Vs, null, [ol]),
-            (t()(), mi(0, null, null, 2, null, ZC)),
+            (t()(), mi(0, null, null, 2, null, QC)),
             io(39, 16384, null, 0, il, [wn], null, null),
             ao(2048, [[23, 4]], js, null, [il]),
-            (t()(), mi(16777216, null, null, 1, null, JC)),
+            (t()(), mi(16777216, null, null, 1, null, tx)),
             io(42, 802816, null, 0, zl, [Cn, wn, qn], { ngForOf: [0, 'ngForOf'] }, null),
             (t()(), yi(43, 0, null, null, 11, null, null, null, null, null, null, null)),
             io(44, 16384, null, 3, al, [], { name: [0, 'name'] }, null),
@@ -31906,20 +31960,37 @@
             Co(335544320, 30, { headerCell: 0 }),
             Co(335544320, 31, { footerCell: 0 }),
             ao(2048, [[19, 4]], Ls, null, [al]),
-            (t()(), mi(0, null, null, 2, null, tx)),
+            (t()(), mi(0, null, null, 2, null, ex)),
             io(50, 16384, null, 0, ol, [wn], null, null),
             ao(2048, [[30, 4]], Vs, null, [ol]),
-            (t()(), mi(0, null, null, 2, null, rx)),
+            (t()(), mi(0, null, null, 2, null, ix)),
             io(53, 16384, null, 0, il, [wn], null, null),
             ao(2048, [[29, 4]], js, null, [il]),
             (t()(), yi(55, 0, null, null, 6, 'tbody', [], null, null, null, null, null)),
-            (t()(), mi(0, null, null, 2, null, ix)),
+            (t()(), mi(0, null, null, 2, null, ox)),
             io(57, 540672, null, 0, ul, [wn, qn], { columns: [0, 'columns'] }, null),
             ao(2048, [[21, 4]], qs, null, [ul]),
-            (t()(), mi(0, null, null, 2, null, ox)),
+            (t()(), mi(0, null, null, 2, null, ax)),
             io(60, 540672, null, 0, cl, [wn, qn], { columns: [0, 'columns'] }, null),
             ao(2048, [[20, 4]], Gs, null, [cl]),
-            (t()(), yi(62, 0, null, null, 2, 'mat-paginator', [['class', 'mat-paginator']], null, null, null, OC, bC)),
+            (t()(),
+            yi(
+              62,
+              0,
+              null,
+              null,
+              3,
+              'mat-paginator',
+              [['class', 'mat-paginator']],
+              null,
+              [[null, 'elementInView']],
+              function(t, e, n) {
+                var r = !0;
+                return 'elementInView' === e && (r = !1 !== t.component.onElementInView(n) && r), r;
+              },
+              OC,
+              bC
+            )),
             io(
               63,
               245760,
@@ -31930,7 +32001,8 @@
               { pageSize: [0, 'pageSize'], pageSizeOptions: [1, 'pageSizeOptions'] },
               null
             ),
-            Ao(32, 64, new Array(4))
+            Ao(32, 64, new Array(4)),
+            io(65, 81920, null, 0, IC, [], null, { elementInView: 'elementInView' })
           ],
           function(t, e) {
             var n = e.component;
@@ -31944,7 +32016,8 @@
               t(e, 44, 0, 'delete'),
               t(e, 57, 0, n.columnsToDisplay),
               t(e, 60, 0, n.columnsToDisplay),
-              t(e, 63, 0, 10, t(e, 64, 0, 5, 10, 25, 100));
+              t(e, 63, 0, 10, t(e, 64, 0, 5, 10, 25, 100)),
+              t(e, 65, 0);
           },
           function(t, e) {
             t(e, 1, 1, [
@@ -31988,7 +32061,7 @@
           }
         );
       }
-      function sx(t) {
+      function lx(t) {
         return Mo(
           0,
           [
@@ -32009,12 +32082,12 @@
               [[2, 'mat-expanded', null], [2, 'mat-expansion-panel-spacing', null]],
               null,
               null,
-              BC,
-              LC
+              HC,
+              zC
             )),
-            io(6, 1753088, [[3, 4]], 1, MC, [[3, DC], xn, Os, Cn], null, null),
+            io(6, 1753088, [[3, 4]], 1, FC, [[3, NC], xn, Os, Cn], null, null),
             Co(335544320, 4, { _lazyContent: 0 }),
-            ao(256, null, DC, void 0, []),
+            ao(256, null, NC, void 0, []),
             (t()(),
             yi(
               9,
@@ -32042,10 +32115,10 @@
                   r
                 );
               },
-              qC,
-              HC
+              GC,
+              UC
             )),
-            io(10, 180224, null, 0, FC, [MC, fn, uf, xn], null, null),
+            io(10, 180224, null, 0, jC, [FC, fn, uf, xn], null, null),
             To(11, { collapsedHeight: 0, expandedHeight: 1 }),
             To(12, { value: 0, params: 1 }),
             (t()(),
@@ -32063,7 +32136,7 @@
               null,
               null
             )),
-            io(14, 16384, null, 0, jC, [], null, null),
+            io(14, 16384, null, 0, VC, [], null, null),
             (t()(), Ro(-1, null, ['Add New Person'])),
             (t()(),
             yi(
@@ -32234,9 +32307,9 @@
               null
             )),
             io(39, 16384, [[8, 4]], 0, ww, [], null, null),
-            (t()(), mi(16777216, null, null, 1, null, WC)),
-            io(41, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null),
             (t()(), mi(16777216, null, null, 1, null, KC)),
+            io(41, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null),
+            (t()(), mi(16777216, null, null, 1, null, YC)),
             io(43, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null),
             (t()(),
             yi(
@@ -32387,7 +32460,7 @@
             )),
             io(66, 180224, null, 0, df, [fn, Ah, uf, [2, Py]], null, null),
             (t()(), Ro(-1, 0, ['Add'])),
-            (t()(), mi(16777216, null, null, 1, null, ax)),
+            (t()(), mi(16777216, null, null, 1, null, sx)),
             io(69, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null)
           ],
           function(t, e) {
@@ -32525,7 +32598,7 @@
           }
         );
       }
-      var lx = Hr({
+      var ux = Hr({
         encapsulation: 0,
         styles: [
           [
@@ -32534,7 +32607,7 @@
         ],
         data: {}
       });
-      function ux(t) {
+      function cx(t) {
         return Mo(
           0,
           [
@@ -32583,12 +32656,12 @@
           }
         );
       }
-      function cx(t) {
+      function hx(t) {
         return Mo(
           0,
           [
             (t()(), yi(0, 0, null, null, 2, 'span', [], null, null, null, null, null)),
-            (t()(), mi(16777216, null, null, 1, null, ux)),
+            (t()(), mi(16777216, null, null, 1, null, cx)),
             io(2, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null)
           ],
           function(t, e) {
@@ -32597,7 +32670,7 @@
           null
         );
       }
-      function hx(t) {
+      function px(t) {
         return Mo(
           0,
           [
@@ -32646,12 +32719,12 @@
           }
         );
       }
-      function px(t) {
+      function dx(t) {
         return Mo(
           0,
           [
             (t()(), yi(0, 0, null, null, 2, 'li', [], null, null, null, null, null)),
-            (t()(), mi(16777216, null, null, 1, null, hx)),
+            (t()(), mi(16777216, null, null, 1, null, px)),
             io(2, 16384, null, 0, Hl, [Cn, wn], { ngIf: [0, 'ngIf'] }, null)
           ],
           function(t, e) {
@@ -32660,7 +32733,7 @@
           null
         );
       }
-      function dx(t) {
+      function fx(t) {
         return Mo(
           2,
           [
@@ -32787,8 +32860,8 @@
                 var r = !0;
                 return 'personEvent' === e && (r = !1 !== t.component.handlePersonEvent(n) && r), r;
               },
-              sx,
-              GC
+              lx,
+              WC
             )),
             io(
               19,
@@ -32837,7 +32910,7 @@
             Co(603979776, 5, { linksWithHrefs: 1 }),
             To(27, { exact: 0 }),
             (t()(), Ro(-1, null, ['All'])),
-            (t()(), mi(16777216, null, null, 2, null, cx)),
+            (t()(), mi(16777216, null, null, 2, null, hx)),
             io(30, 802816, null, 0, zl, [Cn, wn, qn], { ngForOf: [0, 'ngForOf'] }, null),
             Po(31, 1),
             (t()(),
@@ -32929,7 +33002,7 @@
             (t()(), Ro(-1, null, ['Total Persons'])),
             (t()(), Ro(44, null, [': ', ''])),
             (t()(), yi(45, 0, null, 0, 3, 'ul', [], null, null, null, null, null)),
-            (t()(), mi(16777216, null, null, 2, null, px)),
+            (t()(), mi(16777216, null, null, 2, null, dx)),
             io(47, 802816, null, 0, zl, [Cn, wn, qn], { ngForOf: [0, 'ngForOf'] }, null),
             Po(48, 1),
             (t()(), yi(49, 0, null, null, 6, 'footer', [['class', 'footer']], null, null, null, null, null)),
@@ -32982,14 +33055,14 @@
           }
         );
       }
-      var fx = Ni(
+      var mx = Ni(
           'app-container',
           _l,
           function(t) {
             return Mo(
               0,
               [
-                (t()(), yi(0, 0, null, null, 1, 'app-container', [], null, null, null, dx, lx)),
+                (t()(), yi(0, 0, null, null, 1, 'app-container', [], null, null, null, fx, ux)),
                 io(1, 114688, null, 0, _l, [gl, vl, xv, l_, yl], null, null)
               ],
               function(t, e) {
@@ -33002,8 +33075,8 @@
           {},
           []
         ),
-        mx = Hr({ encapsulation: 0, styles: [['']], data: {} });
-      function yx(t) {
+        yx = Hr({ encapsulation: 0, styles: [['']], data: {} });
+      function gx(t) {
         return Mo(
           0,
           [
@@ -33016,14 +33089,14 @@
           null
         );
       }
-      var gx = Ni(
+      var vx = Ni(
           'app-root',
           vh,
           function(t) {
             return Mo(
               0,
               [
-                (t()(), yi(0, 0, null, null, 1, 'app-root', [], null, null, null, yx, mx)),
+                (t()(), yi(0, 0, null, null, 1, 'app-root', [], null, null, null, gx, yx)),
                 io(1, 49152, null, 0, vh, [], null, null)
               ],
               null,
@@ -33034,8 +33107,8 @@
           {},
           []
         ),
-        vx = function() {},
-        _x = (function(t, e, n) {
+        _x = function() {},
+        bx = (function(t, e, n) {
           return new Ha(gh, [vh], function(t) {
             return (function(t) {
               for (var e = {}, n = [], r = !1, i = 0; i < t.length; i++) {
@@ -33047,7 +33120,7 @@
               }
               return { factory: null, providersByKey: e, providers: t, modules: n, isRoot: r };
             })([
-              ki(512, Re, De, [[8, [Dd, Fy, zy, fx, gx]], [3, Re], Me]),
+              ki(512, Re, De, [[8, [Dd, Fy, zy, mx, vx]], [3, Re], Me]),
               ki(5120, Qn, Jn, [[3, Qn]]),
               ki(4608, Ml, Fl, [Qn, [2, Nl]]),
               ki(5120, ye, ge, []),
@@ -33187,9 +33260,9 @@
               ki(1073742336, hw, hw, []),
               ki(1073742336, Bd, Bd, []),
               ki(1073742336, L_, L_, []),
-              ki(1073742336, RC, RC, []),
-              ki(1073742336, VC, VC, []),
-              ki(1073742336, vx, vx, []),
+              ki(1073742336, DC, DC, []),
+              ki(1073742336, LC, LC, []),
+              ki(1073742336, _x, _x, []),
               ki(1073742336, fh, fh, []),
               ki(1073742336, mh, mh, []),
               ki(1024, x_, I_, [[3, l_]]),
@@ -33233,7 +33306,7 @@
         Je = !1;
       })(),
         cc()
-          .bootstrapModuleFactory(_x)
+          .bootstrapModuleFactory(bx)
           .catch(function(t) {
             return console.log(t);
           });

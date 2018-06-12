@@ -41,6 +41,7 @@ export class ContainerComponent implements OnInit {
     this.columnsToDisplay = this.calculateTraits(new Person({})).concat('delete');
 
     if (this.isBEActive) {
+      this.personBEService.loadPersons();
       this.personBEService.data.subscribe(data => this.handleData(data));
     } else {
       this.personService.data.subscribe(data => this.handleData(data));

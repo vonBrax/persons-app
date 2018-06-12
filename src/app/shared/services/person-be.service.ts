@@ -16,7 +16,7 @@ export class PersonBEService {
   data: BehaviorSubject<Person[] | undefined> = new BehaviorSubject<Person[] | undefined>(undefined);
 
   constructor(private http: HttpClient) {
-    this.loadPersons();
+    // this.loadPersons();
   }
 
   loadPersons() {

@@ -9,7 +9,7 @@ router.get('/persons', (req, res) => {
   fs.readFile('persons.json', 'utf8', (err, data) => {
     if (err) {
       console.log(err);
-      res.status(500).send();
+      res.status(200).json(persons);
     } else {
       if (data) {
         persons = JSON.parse(data);
