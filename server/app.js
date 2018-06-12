@@ -21,15 +21,11 @@ if ((process.env.NODE_ENV = 'development')) {
   app.use(morgan('dev'));
 }
 
-app.use(express.static(path.join(__dirname, '../dist/labfolder')));
+app.use(express.static(path.join(__dirname, '../dist/personsapp')));
 app.use('/api', personsRoute);
 
-// app.get('/', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../dist/labfolder/index.html'));
-// });
-
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/labfolder/index.html'));
+  res.sendFile(path.join(__dirname, '../dist/personsapp/index.html'));
 });
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));

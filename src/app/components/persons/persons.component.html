@@ -56,7 +56,6 @@
       mat-table
       [dataSource]="dataSource"
       matSort
-      (change)="onChange($event)"
     >
 
 
@@ -113,25 +112,31 @@
               color="warn"
               type="button"
               data-action="confirmAction"
+              @confirmDialog
             >
               <mat-icon aria-label="delete person">delete_forever</mat-icon>
             </button>
           </ng-container>
           <ng-container *ngIf="person.confirm">
-            <p>Delete "{{person.name}}"?</p>
-            <p>
-              <button
-                mat-stroked-button
-                data-action="cancelDelete"
-                class="btn--small"
-              >No</button>
-              <button
-                mat-stroked-button
-                color="warn"
-                data-action="deleteUser"
-                class="btn--small"
-              >Yes</button>
-            </p>
+            <div
+              class="confirm-dialog-wrap"
+              @confirmDialog
+            >
+              <p>Delete "{{person.name}}"?</p>
+              <p>
+                <button
+                  mat-stroked-button
+                  data-action="cancelDelete"
+                  class="btn--small"
+                >No</button>
+                <button
+                  mat-stroked-button
+                  color="warn"
+                  data-action="deleteUser"
+                  class="btn--small"
+                >Yes</button>
+              </p>
+            </div>
           </ng-container>
         </td>
       </ng-container>
@@ -151,6 +156,7 @@
     <mat-paginator
       [pageSizeOptions]="[5, 10, 25, 100]"
       [pageSize]="10"
+      (elementInView)="onElementInView($event)"
     ></mat-paginator>
 
   </div>

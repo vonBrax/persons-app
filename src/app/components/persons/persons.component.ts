@@ -11,11 +11,13 @@ import {
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, MatCheckboxChange, MatExpansionPanel } from '@angular/material';
 import { Person, PersonEvent } from '../../shared/classes/person.class';
+import { personsAnimations } from './persons.animations';
 
 @Component({
   selector: 'app-persons',
   templateUrl: './persons.component.html',
-  styleUrls: ['./persons.component.css']
+  styleUrls: ['./persons.component.css'],
+  animations: [personsAnimations.confirmDialogTransition]
 })
 export class PersonsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -33,7 +35,7 @@ export class PersonsComponent implements OnInit, AfterViewInit {
   constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    // Form controls to add new persons
+    // Add New Person form controls
     this.formGroup = this.fb.group({
       name: this.fb.control('', Validators.compose([Validators.required, Validators.minLength(3)])),
       hasSuperPowers: this.fb.control(false),
@@ -81,13 +83,9 @@ export class PersonsComponent implements OnInit, AfterViewInit {
       };
       this.personEvent.emit(eventParams);
       this.formGroup.reset();
-      if (!this.dataSource.paginator || !this.dataSource.sort) {
-        setTimeout(() => {
-          // @TODO: Change implementation here; get rid of setTimeout
-          this.dataSource.paginator = this.dataSource.paginator || this.paginator;
-          this.dataSource.sort = this.dataSource.sort || this.sort;
-          this.cd.detectChanges();
-        }, 300);
+      if (this.dataSource.data.length === 0) {
+        // @TODO: Change this implementation (remove setTimeout)
+        setTimeout(() => this.cd.detectChanges(), 100);
       }
     } else {
       this.name.markAsTouched();
@@ -127,5 +125,19 @@ export class PersonsComponent implements OnInit, AfterViewInit {
       }
     };
     this.personEvent.emit(eventParams);
+  }
+
+  /**
+   * Helper function called when an element marked with the directive
+   * "elementInView" is loaded (trying to fix issues when the paginator
+   * is added to view with a ngIf after this component init)
+   *
+   * @param evt : string
+   */
+  onElementInView(evt: string): void {
+    setTimeout(() => {
+      this.dataSource.paginator = this.dataSource.paginator || this.paginator;
+      this.dataSource.sort = this.dataSource.sort || this.sort;
+    }, 0);
   }
 }

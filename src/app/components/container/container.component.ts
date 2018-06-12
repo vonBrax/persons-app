@@ -136,8 +136,6 @@ export class ContainerComponent implements OnInit {
       // this.filteredPersons = this.filter ? this.persons.filter(person => person[this.filter]) : this.persons;
       this.dataSource = this.dataSource || new MatTableDataSource(this.filteredPersons);
       this.dataSource.data = this.filteredPersons;
-      console.log('HANDLE DATA');
-      console.log(this.dataSource.data);
       this.viewOnlyStats = this.calculateStats();
     }
   }

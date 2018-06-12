@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PersonService, SnackbarService, PersonBEService } from './shared/services';
 
 import { ToArrayPipe } from './shared/pipes/toArray.pipe';
+import { ElementInViewDirective } from './shared/directives/element-in-view.directive';
 
 import { AppComponent } from './app.component';
 import { ContainerComponent, PersonsComponent } from './components/';
@@ -22,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent, ContainerComponent, PersonsComponent, ToArrayPipe],
+  declarations: [AppComponent, ContainerComponent, PersonsComponent, ToArrayPipe, ElementInViewDirective],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
