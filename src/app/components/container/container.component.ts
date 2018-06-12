@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 
 import { Person, PersonEvent, PersonStats } from '../../shared/classes/person.class';
-import { SnackbarService, PersonService } from '../../shared/services';
+import { SnackbarService, PersonService, PersonBEService } from '../../shared/services';
 
 @Component({
   selector: 'app-container',
@@ -18,10 +18,17 @@ export class ContainerComponent implements OnInit {
   columnsToDisplay: string[];
   filter: string;
   confirmDialogPerson: Person;
-  stats: PersonStats;
+  mainStats: PersonStats;
+  viewOnlyStats: PersonStats;
+
+  // Quick hacky way to decide whether we are using data coming from
+  // the BE or data coming from the local storage (based on the url path)
+  isBEActive = /personsBE/.test(this.router.url);
+  basePath = '/persons';
 
   constructor(
     private personService: PersonService,
+    private personBEService: PersonBEService,
     private route: ActivatedRoute,
     private router: Router,
     private snackbarService: SnackbarService
@@ -33,21 +40,15 @@ export class ContainerComponent implements OnInit {
     // to add more traits in the future - just need to change the Person class)
     this.columnsToDisplay = this.calculateTraits(new Person({})).concat('delete');
 
-    // Retrieve available Person data and calculate stats
-    this.personService.data.subscribe(data => {
-      if (data) {
-        this.persons = data;
-        this.filteredPersons = this.filter ? this.persons.filter(person => person[this.filter]) : this.persons;
-        if (this.dataSource) {
-          this.dataSource.data = this.filteredPersons;
-        }
-        this.stats = this.calculateStats();
-      }
-    });
+    if (this.isBEActive) {
+      this.personBEService.data.subscribe(data => this.handleData(data));
+    } else {
+      this.personService.data.subscribe(data => this.handleData(data));
+    }
 
     // Subscribe to route params changes
     this.route.paramMap.subscribe(params => {
-      this.filteredPersons = this.persons;
+      // this.filteredPersons = this.persons;
       if (params.has('filterBy')) {
         this.filter = params.get('filterBy');
         this.filteredPersons = this.persons.filter(person => person[this.filter]);
@@ -57,7 +58,7 @@ export class ContainerComponent implements OnInit {
       } else {
         this.dataSource = new MatTableDataSource(this.filteredPersons);
       }
-      this.stats = this.calculateStats();
+      this.viewOnlyStats = this.calculateStats();
     });
   }
 
@@ -117,6 +118,31 @@ export class ContainerComponent implements OnInit {
   }
 
   /**
+   * Helper function to handle data coming from the rxjs
+   * Behavior Subject
+   *
+   * @param data: Person[]
+   */
+  handleData(data: Person[] | undefined): void {
+    if (data) {
+      this.persons = data;
+      this.filteredPersons = this.persons;
+      this.mainStats = this.calculateStats();
+
+      if (this.filter) {
+        this.filteredPersons = this.persons.filter(person => person[this.filter]);
+      }
+
+      // this.filteredPersons = this.filter ? this.persons.filter(person => person[this.filter]) : this.persons;
+      this.dataSource = this.dataSource || new MatTableDataSource(this.filteredPersons);
+      this.dataSource.data = this.filteredPersons;
+      console.log('HANDLE DATA');
+      console.log(this.dataSource.data);
+      this.viewOnlyStats = this.calculateStats();
+    }
+  }
+
+  /**
    * Function called by child component (persons) via output
    * EventEmitter when user interaction occurs.
    *
@@ -126,16 +152,18 @@ export class ContainerComponent implements OnInit {
     const { action, person, propertyChanged } = args;
     switch (action) {
       case 'add':
-        const added = this.personService.add(person);
+        const added = this.isBEActive ? this.personBEService.add(person) : this.personService.add(person);
         if (added) {
           this.checkIfInView(person);
         }
         break;
       case 'delete':
-        this.personService.delete(person);
+        this.isBEActive ? this.personBEService.delete(person) : this.personService.delete(person);
         break;
       case 'update':
-        this.personService.update(person, propertyChanged);
+        this.isBEActive
+          ? this.personBEService.update(person, propertyChanged)
+          : this.personService.update(person, propertyChanged);
         break;
     }
   }

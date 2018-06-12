@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  ViewChild,
+  EventEmitter,
+  AfterViewInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatSort, MatCheckboxChange, MatExpansionPanel } from '@angular/material';
 import { Person, PersonEvent } from '../../shared/classes/person.class';
@@ -21,7 +30,7 @@ export class PersonsComponent implements OnInit, AfterViewInit {
     return this.formGroup.get('name') as AbstractControl;
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
     // Form controls to add new persons
@@ -72,6 +81,15 @@ export class PersonsComponent implements OnInit, AfterViewInit {
       };
       this.personEvent.emit(eventParams);
       this.formGroup.reset();
+      if (!this.dataSource.paginator || !this.dataSource.sort) {
+        setTimeout(() => {
+          this.dataSource.paginator = this.dataSource.paginator || this.paginator;
+          this.dataSource.sort = this.dataSource.sort || this.sort;
+          console.log(this.dataSource.paginator);
+          console.log(this.dataSource.data);
+          this.cd.detectChanges();
+        }, 300);
+      }
     } else {
       this.name.markAsTouched();
     }

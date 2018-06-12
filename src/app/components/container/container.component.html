@@ -30,16 +30,16 @@
         <nav class="nav">
           <span>
             <a
-              routerLink="/persons"
+              [routerLink]="isBEActive ? basePath + 'BE' : basePath"
               routerLinkActive="active-filter"
               [routerLinkActiveOptions]="{ exact: true }"
             >All</a>
           </span>
 
-          <span *ngFor="let trait of stats | toArray">
+          <span *ngFor="let trait of mainStats | toArray">
             <ng-container *ngIf="trait.name !== 'total' && trait.value > 0">&nbsp;|&nbsp;
               <a
-                routerLink="/persons/{{trait.name}}"
+                [routerLink]="isBEActive ? basePath + 'BE/' + trait.name : basePath + '/'+ trait.name"
                 routerLinkActive="active-filter"
               >{{trait.name}}</a>
             </ng-container>
@@ -62,39 +62,20 @@
       <h2>Sidebar</h2>
       <h3>
         <a
-          routerLink="/persons"
+          [routerLink]="isBEActive ? basePath + 'BE' : basePath"
           routerLinkActive="active-filter"
           [routerLinkActiveOptions]="{ exact: true }"
-        >Total Persons</a>: {{stats.total}}</h3>
+        >Total Persons</a>: {{viewOnlyStats.total}}</h3>
       <ul>
 
-        <li *ngFor="let trait of stats | toArray">
+        <li *ngFor="let trait of viewOnlyStats | toArray">
           <ng-container *ngIf="trait.value > 0 && trait.name !== 'total'">
             <a
-              routerLink="/persons/{{trait.name}}"
+              [routerLink]="isBEActive ? basePath + 'BE/' + trait.name : basePath + '/' + trait.name"
               routerLinkActive="active-filter"
             >{{trait.name}}: {{trait.value}}</a>
           </ng-container>
         </li>
-
-        <!--
-        <li *ngIf="stats.superPowers > 0">
-          <a
-            routerLink="/persons/super-powers"
-            routerLinkActive="active-filter"
-          >With super powers</a>: {{stats.superPowers}}</li>
-        <li *ngIf="stats.rich > 0">
-          <a
-            routerLink="/persons/rich"
-            routerLinkActive="active-filter"
-          >Rich</a>: {{stats.rich}}</li>
-        <li *ngIf="stats.genius > 0">
-          <a
-            routerLink="/persons/genius"
-            routerLinkActive="active-filter"
-          >Genius</a>: {{stats.genius}}</li>
--->
-
       </ul>
     </mat-sidenav>
   </mat-sidenav-container>
