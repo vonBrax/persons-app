@@ -83,10 +83,9 @@ export class PersonsComponent implements OnInit, AfterViewInit {
       this.formGroup.reset();
       if (!this.dataSource.paginator || !this.dataSource.sort) {
         setTimeout(() => {
+          // @TODO: Change implementation here; get rid of setTimeout
           this.dataSource.paginator = this.dataSource.paginator || this.paginator;
           this.dataSource.sort = this.dataSource.sort || this.sort;
-          console.log(this.dataSource.paginator);
-          console.log(this.dataSource.data);
           this.cd.detectChanges();
         }, 300);
       }
